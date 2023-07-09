@@ -1,0 +1,13 @@
+name = "example"
+description = "Shiny new project"
+version = "0.1.0-dev"
+
+authors = ["Jeremy Grosser"]
+maintainers = ["Jeremy Grosser <jeremy@synack.me>"]
+maintainers-logins = ["JeremyGrosser"]
+
+executables = ["example"]
+[[depends-on]]
+sqlite3 = "^3.42.0"
+[[pins]]
+sqlite3 = { path='..' }

@@ -1,0 +1,63 @@
+with "config/sqlite3_config.gpr";
+project Sqlite3 is
+
+   for Library_Name use "Sqlite3";
+   for Library_Version use Project'Library_Name & ".so." & Sqlite3_Config.Crate_Version;
+
+   for Languages use ("C", "Ada");
+
+   for Source_Dirs use (
+      "sqlite-amalgamation-3420000/",
+      "src/",
+      "config/"
+   );
+
+   for Excluded_Source_Files use (
+      "shell.c"
+   );
+
+   for Object_Dir use "obj/" & Sqlite3_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Library_Dir use "lib";
+
+   type Library_Type_Type is ("relocatable", "static", "static-pic");
+   Library_Type : Library_Type_Type :=
+     external ("SQLITE3_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+   for Library_Kind use Library_Type;
+
+   package Compiler is
+      for Default_Switches ("Ada") use Sqlite3_Config.Ada_Compiler_Switches & (
+         "-gnatyM120"
+      );
+
+      --  https://www.sqlite.org/compile.html
+      for Switches ("C") use (
+         "-DSQLITE_DQS=0",
+         "-DSQLITE_THREADSAFE=2",
+         "-DSQLITE_DEFAULT_MEMSTATUS=0",
+         "-DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1",
+         "-DSQLITE_LIKE_DOESNT_MATCH_BLOBS",
+         "-DSQLITE_MAX_EXPR_DEPTH=0",
+         "-DSQLITE_OMIT_DECLTYPE",
+         "-DSQLITE_OMIT_DEPRECATED",
+         "-DSQLITE_OMIT_PROGRESS_CALLBACK",
+         "-DSQLITE_OMIT_SHARED_CACHE",
+         "-DSQLITE_USE_ALLOCA",
+         "-DSQLITE_OMIT_AUTOINIT",
+         "-O3",
+         "-march=native",
+         "-ffunction-sections",
+         "-fdata-sections",
+         "-fstack-usage"
+      );
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+end Sqlite3;
