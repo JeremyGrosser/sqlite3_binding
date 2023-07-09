@@ -7,7 +7,9 @@ with Interfaces.C;
 with Interfaces;
 with System.Storage_Elements;
 
-package Sqlite is
+package Sqlite
+   with Preelaborate
+is
 
    Database_Error : exception;
 
