@@ -50,4 +50,6 @@ begin
       Ada.Text_IO.Put_Line (P'Image);
    end loop;
 
+   Sqlite.Finalize (DB, Stmt);
+   Sqlite.Close (DB);
 end Example;
