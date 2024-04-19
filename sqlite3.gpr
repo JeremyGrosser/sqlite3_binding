@@ -7,7 +7,7 @@ project Sqlite3 is
    for Languages use ("C", "Ada");
 
    for Source_Dirs use (
-      "sqlite-amalgamation-3420000/",
+      "sqlite-amalgamation-3450300/",
       "src/",
       "config/"
    );
@@ -44,6 +44,7 @@ project Sqlite3 is
          "-DSQLITE_OMIT_SHARED_CACHE",
          "-DSQLITE_USE_ALLOCA",
          "-DSQLITE_OMIT_AUTOINIT",
+         "-DSQLITE_ENABLE_FTS5",
          "-O3",
          "-march=native",
          "-ffunction-sections",
