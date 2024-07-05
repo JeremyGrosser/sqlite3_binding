@@ -51,7 +51,7 @@ package body Sqlite is
 
       Conn : Connection;
    begin
-      Check (C_Open (Filename, Conn, Flags), Conn, "Open");
+      Check (C_Open (Filename & ASCII.NUL, Conn, Flags), Conn, "Open");
       return Conn;
    end Open;
 
@@ -102,16 +102,13 @@ package body Sqlite is
       function C_Bind_Text
          (Stmt       : not null Statement;
           Param      : int;
-          Text       : chars_ptr;
+          Text       : String;
           Length     : int;
           Destructor : System.Address)
           return Result_Code
       with Import, Convention => C, External_Name => "sqlite3_bind_text";
-
-      Ptr : chars_ptr := New_String (Text);
    begin
-      Check (C_Bind_Text (Stmt, int (Param), Ptr, Text'Length, SQLITE_TRANSIENT), Conn, "Bind_Text");
-      Free (Ptr);
+      Check (C_Bind_Text (Stmt, int (Param), Text & ASCII.NUL, Text'Length, SQLITE_TRANSIENT), Conn, "Bind_Text");
    end Bind_Text;
 
    function Step
@@ -319,7 +316,7 @@ package body Sqlite is
           return Result_Code
       with Import, Convention => C, External_Name => "sqlite3_exec";
    begin
-      Check (C_Exec (Conn, SQL), Conn, "Exec");
+      Check (C_Exec (Conn, SQL & ASCII.NUL), Conn, "Exec");
    end Exec;
 
    procedure Close
