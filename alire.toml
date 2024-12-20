@@ -8,3 +8,6 @@ maintainers-logins = ["JeremyGrosser"]
 licenses = "blessing"
 website = "https://www.sqlite.org/"
 tags = []
+
+[configuration.variables]
+Enable_FTS5 = {type = "Boolean", default = false}
