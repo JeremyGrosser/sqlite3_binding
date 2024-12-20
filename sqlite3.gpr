@@ -31,25 +31,25 @@ project Sqlite3 is
       );
 
       --  https://www.sqlite.org/compile.html
-      for Switches ("C") use (
-         "-DSQLITE_DQS=0",
-         "-DSQLITE_THREADSAFE=0",
-         "-DSQLITE_DEFAULT_MEMSTATUS=0",
-         "-DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1",
-         "-DSQLITE_LIKE_DOESNT_MATCH_BLOBS",
-         "-DSQLITE_MAX_EXPR_DEPTH=0",
-         "-DSQLITE_OMIT_DECLTYPE",
-         "-DSQLITE_OMIT_DEPRECATED",
-         "-DSQLITE_OMIT_PROGRESS_CALLBACK",
-         "-DSQLITE_OMIT_SHARED_CACHE",
-         "-DSQLITE_USE_ALLOCA",
-         "-DSQLITE_OMIT_AUTOINIT",
-         "-DSQLITE_ENABLE_FTS5",
-         "-O3",
-         "-march=native",
+      Sqlite_Switches :=
+        External_As_List ("SQLITE3_BINDING_SWITCHES",
+         " -DSQLITE_DQS=0" &
+         " -DSQLITE_THREADSAFE=0" &
+         " -DSQLITE_DEFAULT_MEMSTATUS=0" &
+         " -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1" &
+         " -DSQLITE_LIKE_DOESNT_MATCH_BLOBS" &
+         " -DSQLITE_MAX_EXPR_DEPTH=0" &
+         " -DSQLITE_OMIT_DECLTYPE" &
+         " -DSQLITE_OMIT_DEPRECATED" &
+         " -DSQLITE_OMIT_PROGRESS_CALLBACK" &
+         " -DSQLITE_OMIT_SHARED_CACHE" &
+         " -DSQLITE_USE_ALLOCA" &
+         " -DSQLITE_OMIT_AUTOINIT" &
+         " -DSQLITE_STRICT_SUBTYPE=1");
+
+      for Switches ("C") use Sqlite_Switches & (
          "-ffunction-sections",
-         "-fdata-sections",
-         "-fstack-usage"
+         "-fdata-sections"
       );
    end Compiler;
 
