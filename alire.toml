@@ -11,3 +11,4 @@ tags = []
 
 [configuration.variables]
 Enable_FTS5 = {type = "Boolean", default = false}
+THREADSAFE = {type = "Integer", first=0, last=2, default=0}
