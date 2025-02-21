@@ -1,6 +1,6 @@
 name = "sqlite3"
 description = "SQLite is a C library that implements an SQL database engine."
-version = "3.47.2"
+version = "3.49.1"
 
 authors = ["D. Richard Hipp <drh@hwaci.com>"]
 maintainers = ["Jeremy Grosser <jeremy@synack.me>"]
