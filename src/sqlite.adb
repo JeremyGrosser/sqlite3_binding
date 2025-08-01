@@ -3,6 +3,7 @@
 --
 --  SPDX-License-Identifier: BSD-3-Clause
 --
+with Ada.Unchecked_Conversion;
 with Interfaces.C.Strings; use Interfaces.C.Strings;
 with Interfaces.C; use Interfaces.C;
 with System;
@@ -41,17 +42,20 @@ package body Sqlite is
        Flags    : Open_Flags := (others => False))
        return Connection
    is
+      function To_Int is new Ada.Unchecked_Conversion (Open_Flags, int);
       function C_Open
-         (Filename : String;
+         (Filename : chars_ptr;
           DB       : out Connection;
-          Flags    : Open_Flags := (others => False);
+          Flags    : int;
           VFS      : System.Address := System.Null_Address)
           return Result_Code
-      with Import, Convention => C, External_Name => "sqlite3_open";
+      with Import, Convention => C, External_Name => "sqlite3_open_v2";
 
+      Name : chars_ptr := New_String (Filename);
       Conn : Connection;
    begin
-      Check (C_Open (Filename & ASCII.NUL, Conn, Flags), Conn, "Open");
+      Check (C_Open (Name, Conn, To_Int (Flags)), Conn, "Open");
+      Free (Name);
       return Conn;
    end Open;
 

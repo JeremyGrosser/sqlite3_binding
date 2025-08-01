@@ -43,7 +43,6 @@ project Sqlite3 is
       --  https://www.sqlite.org/compile.html
       for Switches ("C") use Sqlite_Enable_FTS5 & Sqlite_THREADSAFE & (
          "-DSQLITE_DQS=0",
-         --  "-DSQLITE_THREADSAFE=0",
          "-DSQLITE_DEFAULT_MEMSTATUS=0",
          "-DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1",
          "-DSQLITE_LIKE_DOESNT_MATCH_BLOBS",
