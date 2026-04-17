@@ -152,6 +152,12 @@ is
        Param : Natural;
        Text  : String);
 
+   procedure Bind_Integer
+      (Conn    : Connection;
+       Stmt    : Statement;
+       Param   : Natural;
+       Value   : Integer);
+
    procedure Bind_Integer_64
       (Conn    : Connection;
        Stmt    : Statement;

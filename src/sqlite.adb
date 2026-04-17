@@ -115,6 +115,23 @@ package body Sqlite is
       Check (C_Bind_Text (Stmt, int (Param), Text & ASCII.NUL, Text'Length, SQLITE_TRANSIENT), Conn, "Bind_Text");
    end Bind_Text;
 
+   procedure Bind_Integer
+      (Conn    : Connection;
+       Stmt    : Statement;
+       Param   : Natural;
+       Value   : Integer)
+   is
+      function C_Bind_Int
+         (Stmt : not null Statement;
+          Param : int;
+          Value : int)
+          return Result_Code
+      with Import, Convention => C, External_Name => "sqlite3_bind_int";
+   begin
+      Check (C_Bind_Int (Stmt, int (Param), int (Value)), Conn, "Bind_Integer");
+   end Bind_Integer;
+
+
    procedure Bind_Integer_64
       (Conn    : Connection;
        Stmt    : Statement;
