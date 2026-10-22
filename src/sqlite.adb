@@ -148,6 +148,36 @@ package body Sqlite is
       Check (C_Bind_Int64 (Stmt, int (Param), Value), Conn, "Bind_Integer_64");
    end Bind_Integer_64;
 
+   procedure Bind_Long_Float
+      (Conn    : Connection;
+       Stmt    : Statement;
+       Param   : Natural;
+       Value   : Long_Float)
+   is
+      function C_Bind_Double
+         (Stmt  : not null Statement;
+          Param : int;
+          Value : double)
+          return Result_Code
+      with Import, Convention => C, External_Name => "sqlite3_bind_double";
+   begin
+      Check (C_Bind_Double (Stmt, int (Param), double (Value)), Conn, "Bind_Long_Float");
+   end Bind_Long_Float;
+
+   procedure Bind_Null
+      (Conn    : Connection;
+       Stmt    : Statement;
+       Param   : Natural)
+   is
+      function C_Bind_Null
+         (Stmt  : not null Statement;
+          Param : int)
+          return Result_Code
+      with Import, Convention => C, External_Name => "sqlite3_bind_null";
+   begin
+      Check (C_Bind_Null (Stmt, int (Param)), Conn, "Bind_Null");
+   end Bind_Null;
+
    function Step
       (Conn : Connection;
        Stmt : Statement)
@@ -326,6 +356,30 @@ package body Sqlite is
    begin
       Check (C_Reset (Stmt), Conn, "Reset");
    end Reset;
+
+   function Changes
+      (Conn : Connection)
+      return Natural
+   is
+      function C_Changes
+         (DB : not null Connection)
+         return int
+      with Import, Convention => C, External_Name => "sqlite3_changes";
+   begin
+      return Natural (C_Changes (Conn));
+   end Changes;
+
+   function Last_Insert_Row_Id
+      (Conn : Connection)
+      return Interfaces.Integer_64
+   is
+      function C_Last_Insert_Rowid
+         (DB : not null Connection)
+         return Interfaces.Integer_64
+      with Import, Convention => C, External_Name => "sqlite3_last_insert_rowid";
+   begin
+      return C_Last_Insert_Rowid (Conn);
+   end Last_Insert_Row_Id;
 
    procedure Finalize
       (Conn : Connection;

@@ -164,6 +164,17 @@ is
        Param   : Natural;
        Value   : Interfaces.Integer_64);
 
+   procedure Bind_Long_Float
+      (Conn    : Connection;
+       Stmt    : Statement;
+       Param   : Natural;
+       Value   : Long_Float);
+
+   procedure Bind_Null
+      (Conn    : Connection;
+       Stmt    : Statement;
+       Param   : Natural);
+
    function Step
       (Conn : Connection;
        Stmt : Statement)
@@ -243,6 +254,15 @@ is
    procedure Reset
       (Conn : Connection;
        Stmt : Statement);
+
+   function Changes
+      (Conn : Connection)
+      return Natural;
+   --  Rows modified by the most recent INSERT, UPDATE or DELETE
+
+   function Last_Insert_Row_Id
+      (Conn : Connection)
+      return Interfaces.Integer_64;
 
    procedure Finalize
       (Conn : Connection;
