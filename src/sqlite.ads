@@ -146,6 +146,10 @@ is
       (Stmt : Statement)
       return Boolean;
 
+   subtype Blob is System.Storage_Elements.Storage_Array;
+   --  Assumes Storage_Element'Size = 8, which is true on all platforms GNAT
+   --  supports.
+
    procedure Bind_Text
       (Conn  : Connection;
        Stmt  : Statement;
@@ -174,6 +178,14 @@ is
       (Conn    : Connection;
        Stmt    : Statement;
        Param   : Natural);
+
+   --  The bytes are copied, so Value needn't outlive the call. An empty
+   --  Value binds a zero-length blob, not NULL.
+   procedure Bind_Blob
+      (Conn    : Connection;
+       Stmt    : Statement;
+       Param   : Natural;
+       Value   : Blob);
 
    function Step
       (Conn : Connection;
@@ -210,10 +222,6 @@ is
       (Stmt    : Statement;
        Column  : Natural)
        return String;
-
-   subtype Blob is System.Storage_Elements.Storage_Array;
-   --  Assumes Storage_Element'Size = 8, which is true on all platforms GNAT
-   --  supports.
 
    procedure To_Blob
       (Stmt    : Statement;

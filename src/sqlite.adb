@@ -178,6 +178,42 @@ package body Sqlite is
       Check (C_Bind_Null (Stmt, int (Param)), Conn, "Bind_Null");
    end Bind_Null;
 
+   procedure Bind_Blob
+      (Conn    : Connection;
+       Stmt    : Statement;
+       Param   : Natural;
+       Value   : Blob)
+   is
+      SQLITE_TRANSIENT : constant System.Address :=
+         System.Storage_Elements.To_Address
+            (System.Storage_Elements.Integer_Address'Last);
+
+      function C_Bind_Blob64
+         (Stmt       : not null Statement;
+          Param      : int;
+          Data       : System.Address;
+          Length     : Interfaces.Unsigned_64;
+          Destructor : System.Address)
+          return Result_Code
+      with Import, Convention => C, External_Name => "sqlite3_bind_blob64";
+
+      function C_Bind_Zeroblob
+         (Stmt   : not null Statement;
+          Param  : int;
+          Length : int)
+          return Result_Code
+      with Import, Convention => C, External_Name => "sqlite3_bind_zeroblob";
+   begin
+      --  sqlite3_bind_blob binds NULL when given a null pointer, and an
+      --  empty array has no address to give it
+      if Value'Length = 0 then
+         Check (C_Bind_Zeroblob (Stmt, int (Param), 0), Conn, "Bind_Blob");
+      else
+         Check (C_Bind_Blob64 (Stmt, int (Param), Value'Address, Interfaces.Unsigned_64 (Value'Length),
+                               SQLITE_TRANSIENT), Conn, "Bind_Blob");
+      end if;
+   end Bind_Blob;
+
    function Step
       (Conn : Connection;
        Stmt : Statement)
@@ -251,10 +287,19 @@ package body Sqlite is
       function C_Column_Text
          (Stmt : not null Statement;
           Col  : int)
-          return chars_ptr
+          return System.Address
       with Import, Convention => C, External_Name => "sqlite3_column_text";
    begin
-      Item := Value (C_Column_Text (Stmt, int (Column)), size_t (Item'Length));
+      --  Copied by length, as To_Blob is: Interfaces.C.Strings.Value stops at
+      --  a NUL in the text, and refuses a length of 0 (an empty string)
+      if Item'Length > 0 then
+         declare
+            Text : String (Item'Range)
+               with Import, Address => C_Column_Text (Stmt, int (Column));
+         begin
+            Item := Text;
+         end;
+      end if;
    end To_String;
 
    function To_String
