@@ -131,7 +131,6 @@ package body Sqlite is
       Check (C_Bind_Int (Stmt, int (Param), int (Value)), Conn, "Bind_Integer");
    end Bind_Integer;
 
-
    procedure Bind_Integer_64
       (Conn    : Connection;
        Stmt    : Statement;
